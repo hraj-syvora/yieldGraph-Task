@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import {
   Chart as ChartJS,
   PointElement,
@@ -8,10 +9,9 @@ import {
   ArcElement,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import {lineGraphData} from "../FAKE_DATA";
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -24,36 +24,57 @@ ChartJS.register(
   Filler
 );
 
-const LineGraph = () => {
-    const options = {
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: function(val) {
-                        // console.log(val)
-                        return 'Current APR: ' + val.formattedValue + '%';
-                    },
-                }
-            }
+const LineGraph = ({ lineGraphData }) => {
+  const options = {
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (val) {
+            const dataSetIndex = val.dataSetIndex;
+            if (dataSetIndex === 0)
+              return "Current APR: " + val.formattedValue + "%";
+            else return "1 Month Ago: " + val.formattedValue + "%";
+          },
         },
-        scales: {
-          y: {
-            grid: {
-                display: false,
-            },
-            ticks: {
-              callback : function(value) {
-                return value + '%';
-              },
-              padding: 5,
-              stepSize: 5
-            }
-          }
-        }
-      };
-  return (
-    <Line options={options} data={lineGraphData}/>
-  )
+      },
+    },
+    scales: {
+      y: {
+        grid: {
+          display: false,
+        },
+        border: {
+          color: "#BDBDBD",
+        },
+        ticks: {
+          callback: function (value) {
+            return value + "%";
+          },
+          padding: 5,
+          stepSize: 5,
+          color: "#BDBDBD",
+          font: {
+            weight: "bold",
+            size: "12",
+          },
+        },
+      },
+      x: {
+        border: {
+          color: "#BDBDBD",
+        },
+        ticks: {
+          color: "#BDBDBD",
+          font: {
+            weight: "bold",
+            size: "12",
+          },
+        },
+      },
+    },
+  };
+  return <Line options={options} data={lineGraphData} />;
 };
 
 export default LineGraph;
